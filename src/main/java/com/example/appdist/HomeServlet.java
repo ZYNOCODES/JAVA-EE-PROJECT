@@ -18,7 +18,6 @@ import jakarta.servlet.annotation.*;
 public class HomeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doGet(req, resp);
         Connection connection = null;
         String SELECTquery = "SELECT * FROM collection";
         try {
@@ -30,22 +29,24 @@ public class HomeServlet extends HttpServlet {
             List<com.example.appdist.Models.Collection> items = new ArrayList<>();
             while (SELECTresultSet.next()) {
                 com.example.appdist.Models.Collection collection = new com.example.appdist.Models.Collection(
-                    SELECTresultSet.getInt("id"),
-                    SELECTresultSet.getString("name"),
-                    SELECTresultSet.getString("description")
+                        SELECTresultSet.getInt("id"),
+                        SELECTresultSet.getString("name"),
+                        SELECTresultSet.getString("description")
                 );
                 items.add(collection);
             }
 
             req.setAttribute("items", items);
+            req.setAttribute("test", "test");
             req.getRequestDispatcher("index.jsp").forward(req, resp);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
+
     }
 }

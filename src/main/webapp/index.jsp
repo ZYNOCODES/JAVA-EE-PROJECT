@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
 
 <%
 	if(session.getAttribute("token") == null){
@@ -12,7 +13,7 @@
 		  content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 	<meta name="description" content="" />
 	<meta name="author" content="" />
-	<title>Freelancer - Start Bootstrap Theme</title>
+	<title>Votin</title>
 	<link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
 	<script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"
 			crossorigin="anonymous"></script>
@@ -195,7 +196,7 @@
 	</header>
 	<div class="band">
 		<div class="item">
-			<a href="https://design.tutsplus.com/articles/international-artist-feature-malaysia--cms-26852" class="card">
+			<a href="/Collection" class="card">
 				<div class="thumb" style="background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/210284/flex-1.jpg);"></div>
 				<article>
 					<h1>International Artist Feature: Malaysia</h1>
@@ -204,25 +205,25 @@
 			</a>
 		</div>
 		<div class="item">
-			<a href="https://design.tutsplus.com/articles/international-artist-feature-malaysia--cms-26852" class="card">
+			<a href="/Collection" class="card">
 				<div class="thumb" style="background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/210284/flex-2.jpg);"></div>
 				<article>
-					<h1>International Artist Feature: Malaysia</h1>
+					<h1>Movies</h1>
 					<span>Mary Winkler</span>
 				</article>
 			</a>
 		</div>
 		<div class="item">
-			<a href="https://design.tutsplus.com/articles/international-artist-feature-malaysia--cms-26852" class="card">
+			<a href="/Collection" class="card">
 				<div class="thumb" style="background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/210284/flex-3.jpg);"></div>
 				<article>
-					<h1>International Artist Feature: Malaysia</h1>
+					<h1>Football players</h1>
 					<span>Mary Winkler</span>
 				</article>
 			</a>
 		</div>
 		<div class="item">
-			<a href="https://design.tutsplus.com/articles/international-artist-feature-malaysia--cms-26852" class="card">
+			<a href="/Collection" class="card">
 				<div class="thumb" style="background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/210284/strange.jpg);"></div>
 				<article>
 					<h1>International Artist Feature: Malaysia</h1>
@@ -231,7 +232,7 @@
 			</a>
 		</div>
 		<div class="item">
-			<a href="https://design.tutsplus.com/articles/international-artist-feature-malaysia--cms-26852" class="card">
+			<a href="/Collection" class="card">
 				<div class="thumb" style="background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/210284/flex-1.jpg);"></div>
 				<article>
 					<h1>International Artist Feature: Malaysia</h1>
@@ -240,7 +241,7 @@
 			</a>
 		</div>
 		<div class="item">
-			<a href="https://design.tutsplus.com/articles/international-artist-feature-malaysia--cms-26852" class="card">
+			<a href="/Collection" class="card">
 				<div class="thumb" style="background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/210284/flex-1.jpg);"></div>
 				<article>
 					<h1>International Artist Feature: Malaysia</h1>
@@ -249,7 +250,7 @@
 			</a>
 		</div>
 		<div class="item">
-			<a href="https://design.tutsplus.com/articles/international-artist-feature-malaysia--cms-26852" class="card">
+			<a href="/Collection" class="card">
 				<div class="thumb" style="background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/210284/flor.jpg);"></div>
 				<article>
 					<h1>International Artist Feature: Malaysia</h1>
@@ -258,14 +259,25 @@
 			</a>
 		</div>
 		<div class="item">
-			<a href="https://design.tutsplus.com/articles/international-artist-feature-malaysia--cms-26852" class="card">
+			<a href="/Collection" class="card">
 				<div class="thumb" style="background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/210284/strange.jpg);"></div>
 				<article>
 					<h1>International Artist Feature: Malaysia</h1>
-					<span>Mary Winkler</span>
+					<span>${test}</span>
 				</article>
 			</a>
 		</div>
+		<c:forEach begin="1" end="5">
+			<div class="item">
+				<a href="/Collection" class="card">
+					<div class="thumb" style="background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/210284/strange.jpg);"></div>
+					<article>
+						<h1>International Artist Feature: Malaysia</h1>
+						<span>5555555</span>
+					</article>
+				</a>
+			</div>
+		</c:forEach>
 	</div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
