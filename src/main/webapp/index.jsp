@@ -10,23 +10,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="utf-8" />
-	<meta name="viewport"
-		  content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-	<meta name="description" content="" />
-	<meta name="author" content="" />
-	<title>Votin</title>
-	<link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-	<script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"
-			crossorigin="anonymous"></script>
-	<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700"
-		  rel="stylesheet" type="text/css" />
-	<link
-			href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic"
-			rel="stylesheet" type="text/css" />
+	<jsp:include page="components/header.jsp"/>
 	<style>
 		* {
+			margin: 0;
+			padding: 0;
 			box-sizing: border-box;
+			font-family: "Poppins", sans-serif;
 		}
 
 		body {
@@ -110,6 +100,7 @@
 			box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 			display: flex;
 			flex-direction: column;
+			justify-content: space-between;
 			border-radius: 20px;
 			position: relative;
 			min-height: 100%;
@@ -125,6 +116,7 @@
 		.card-a {
 			text-decoration: none;
 			color: #FFFFFF;
+			height: 100%;
 
 			.collection-article {
 				padding: 20px;
@@ -146,7 +138,7 @@
 				color: #FFFFFF;
 				height: auto;
 				max-height: 220px;
-				width: 250px;
+				max-width: 250px;
 				overflow: hidden;
 				text-overflow: ellipsis;
 				white-space: normal;
@@ -159,6 +151,7 @@
 				text-transform: lowercase;
 				letter-spacing: .05em;
 				margin: 2em 0 0 0;
+				justify-self: end;
 			}
 
 			.thumb {
@@ -176,8 +169,14 @@
 			align-self: center;
 			margin-bottom: 10px;
 			border-radius: 10px;
+			justify-self: end;
 		}
-
+		.delete-form{
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+		}
 
 		.item:nth-child(1) {
 			@media (min-width: 60em) {
@@ -186,7 +185,9 @@
 					font-size: 24px;
 				}
 				p {
-					width: 500px;
+					height: auto;
+					max-height: 20px;
+					width: 100%;
 					white-space: nowrap;
 				}
 			}

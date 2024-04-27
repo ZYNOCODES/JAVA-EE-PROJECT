@@ -15,11 +15,13 @@
                             </li>
                         </c:when>
                         <c:otherwise>
-                            <li class="nav-item">
-                                <form action="AddNewPost" method="get">
-                                    <input type="submit" class="nav-link py-3 px-0 px-lg-3 rounded" value="add new post">
-                                </form>
-                            </li>
+                            <c:if test="${param.condition == 'post'}">
+                                <li class="nav-item">
+                                    <form action="AddNewPost" method="get">
+                                        <input type="submit" class="nav-link py-3 px-0 px-lg-3 rounded" value="add new post">
+                                    </form>
+                                </li>
+                            </c:if>
                         </c:otherwise>
                     </c:choose>
                 </c:if>

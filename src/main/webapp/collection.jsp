@@ -8,23 +8,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <title>Votin</title>
-    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-    <script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"
-            crossorigin="anonymous"></script>
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700"
-          rel="stylesheet" type="text/css" />
-    <link
-            href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic"
-            rel="stylesheet" type="text/css" />
+    <jsp:include page="components/header.jsp"/>
     <style>
         * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
         }
 
         body {
@@ -176,6 +166,12 @@
             margin-bottom: 10px;
             border-radius: 10px;
         }
+        .delete-form{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
 
     </style>
 </head>
@@ -209,6 +205,7 @@
                                 <jsp:include page="components/AdminPostCard.jsp">
                                     <jsp:param name="id" value="${post.getId()}"/>
                                     <jsp:param name="title" value="${post.getTitle()}"/>
+                                    <jsp:param name="collection" value="${post.getCollection()}"/>
                                 </jsp:include>
                             </div>
                         </c:forEach>

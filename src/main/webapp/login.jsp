@@ -6,14 +6,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<jsp:include page="components/header.jsp"/>
 	<style>
 
 		@import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
 
 		* {
+			margin: 0;
+			padding: 0;
 			box-sizing: border-box;
+			font-family: "Poppins", sans-serif;
 		}
 
 		body {

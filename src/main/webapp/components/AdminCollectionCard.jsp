@@ -8,12 +8,16 @@
             <a onclick="${onclick}" class="card-a">
                 <div class="thumb" style="background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/210284/strange.jpg);"></div>
                 <article class="collection-article">
-                    <h1>${param.condition}</h1>
+                    <h1>${param.name}</h1>
                     <p>${param.description}</p>
                     <span>expire en ${param.endDate}</span>
                 </article>
             </a>
-            <input class="card-button" type="submit" value="delete" name="delete"/>
+            <form class="delete-form" action="AddNewCollection" method="get" >
+                <input type="hidden" name="collection" value="${param.id}"/>
+                <input type="hidden" name="action" value="delete"/>
+                <input class="card-button" type="submit" value="Delete" name="delete"/>
+            </form>
         </div>
     </c:when>
     <c:otherwise>
@@ -26,7 +30,11 @@
                     <span>expire en ${param.endDate}</span>
                 </article>
             </a>
-            <input class="card-button" type="submit" value="delete" name="delete"/>
+            <form class="delete-form" action="AddNewCollection" method="get">
+                <input type="hidden" name="collection" value="${param.id}"/>
+                <input type="hidden" name="action" value="delete"/>
+                <input class="card-button" type="submit" value="Delete" name="delete"/>
+            </form>
         </div>
     </c:otherwise>
 </c:choose>

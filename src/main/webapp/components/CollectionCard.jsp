@@ -8,7 +8,7 @@
             <a onclick="${onclick}" class="card-a">
                 <div class="thumb" style="background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/210284/strange.jpg);"></div>
                 <article class="collection-article">
-                    <h1>${param.condition}</h1>
+                    <h1>${param.name}</h1>
                     <p>${param.description}</p>
                     <span>expire en ${param.endDate}</span>
                 </article>

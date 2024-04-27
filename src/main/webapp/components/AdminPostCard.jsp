@@ -8,5 +8,9 @@
             <p>${param.title}</p>
         </article>
     </a>
-    <input class="card-button" type="submit" value="delete" name="delete"/>
+    <form class="delete-form" action="Collection" method="get">
+        <input type="hidden" name="postID" value="${param.id}"/>
+        <input type="hidden" name="action" value="delete"/>
+        <input class="card-button" type="submit" value="Delete" name="delete"/>
+    </form>
 </div>
