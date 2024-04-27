@@ -1,6 +1,6 @@
 <%
 	if(session.getAttribute("token") != null){
-		response.sendRedirect("/");
+		response.sendRedirect("/Home");
 	}
 %>
 <!DOCTYPE html>

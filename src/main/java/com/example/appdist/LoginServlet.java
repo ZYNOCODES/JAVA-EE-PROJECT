@@ -6,8 +6,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.example.appdist.Config.DBConfiguration;
+import com.example.appdist.Models.Post;
+import com.example.appdist.Models.User;
 import com.example.appdist.util.PasswordHashing;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -56,10 +60,17 @@ public class LoginServlet extends HttpServlet {
                 request.getRequestDispatcher("login.jsp").forward(request, response);
                 return;
             }
+            User user = new User(
+                    resultSet.getInt("id"),
+                    resultSet.getString("email"),
+                    resultSet.getString("password"),
+                    resultSet.getString("name"),
+                    resultSet.getString("phone"),
+                    resultSet.getString("type")
+            );
 
-            request.setAttribute("status", "success");
-            request.getSession().setAttribute("token", resultSet.getInt("id"));
-            response.sendRedirect(request.getContextPath() + "/");
+            request.getSession().setAttribute("token", user);
+            response.sendRedirect(request.getContextPath() + "/Home");
 
         } catch (SQLException err) {
             err.printStackTrace();

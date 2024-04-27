@@ -14,7 +14,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
-@WebServlet(name = "HomeServlet", value = "/")
+@WebServlet(name = "HomeServlet", value = "/Home")
 public class HomeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -31,14 +31,18 @@ public class HomeServlet extends HttpServlet {
                 com.example.appdist.Models.Collection collection = new com.example.appdist.Models.Collection(
                         SELECTresultSet.getInt("id"),
                         SELECTresultSet.getString("name"),
-                        SELECTresultSet.getString("description")
+                        SELECTresultSet.getString("description"),
+                        SELECTresultSet.getString("end_date")
                 );
                 items.add(collection);
             }
+            if (items.isEmpty())
+                req.setAttribute("error", "No collections found.");
+            else
+                req.setAttribute("cards", items);
 
-            req.setAttribute("items", items);
-            req.setAttribute("test", "test");
-            req.getRequestDispatcher("index.jsp").forward(req, resp);
+            RequestDispatcher dispatcher = req.getRequestDispatcher("index.jsp");
+            dispatcher.forward(req, resp);
         } catch (Exception e) {
             e.printStackTrace();
         }

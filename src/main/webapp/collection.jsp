@@ -1,4 +1,4 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%
     if(session.getAttribute("token") == null){
@@ -106,15 +106,12 @@
 
         .card {
             background: #272727;
-            text-decoration: none;
-            color: #FFFFFF;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             display: flex;
             flex-direction: column;
+            border-radius: 20px;
+            position: relative;
             min-height: 100%;
-
-        // sets up hover state
-        position: relative;
             top: 0;
             transition: all .1s ease-in;
 
@@ -122,11 +119,15 @@
                 top: -2px;
                 box-shadow: 0 4px 5px rgba(0,0,0,0.2);
             }
+        }
 
-            article {
+        .card-a {
+            text-decoration: none;
+            color: #FFFFFF;
+
+            .collection-article {
                 padding: 20px;
                 flex: 1;
-
                 display: flex;
                 flex-direction: column;
                 justify-content: space-between;
@@ -142,14 +143,19 @@
                 flex: 1;
                 line-height: 1.4;
                 color: #FFFFFF;
+                height: auto;
+                max-height: 220px;
+                width: 250px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: normal;
             }
 
-            input {
+            span {
                 font-size: 12px;
                 font-weight: bold;
-                background-color: white;
-                color: black;
-                text-transform: uppercase;
+                color: #FFFFFF;
+                text-transform: lowercase;
                 letter-spacing: .05em;
                 margin: 2em 0 0 0;
             }
@@ -158,45 +164,58 @@
                 padding-bottom: 60%;
                 background-size: cover;
                 background-position: center center;
+                border-radius: 20px;
             }
+        }
+        .card-button{
+            width: 60%;
+            height: 37px;
+            display: flex;
+            justify-content: center;
+            align-self: center;
+            margin-bottom: 10px;
+            border-radius: 10px;
         }
 
     </style>
 </head>
 <body>
-<nav class="navbar" id="mainNav">
-    <div class="container">
-        <h2 class="navbar-brand">VOTING</h2>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <h3 class="title">${session.getAttribute("token")}</h3>
-                </li>
-                <li class="nav-item mx-0 mx-lg-1">
-                    <form id="logout-form" action="Logout" method="post">
-                        <input type="submit" class="nav-link py-3 px-0 px-lg-3 rounded" value="Logout">
-                    </form>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
+<jsp:include page="components/navbar.jsp">
+    <jsp:param name="condition" value="post"/>
+</jsp:include>
 <div class="cards_container">
-    <header>
-        <h1>Collection</h1>
-    </header>
     <div class="band">
-        <c:forEach begin="1" end="5">
-            <div class="item">
-                <a href="/Collection" class="card">
-                    <div class="thumb" style="background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/210284/strange.jpg);"></div>
-                    <article>
-                        <h1>International Artist Feature: Malaysia</h1>
-                        <input type="submit" value="voter" name="vote"/>
-                    </article>
-                </a>
-            </div>
-        </c:forEach>
+        <c:choose>
+            <c:when test="${error != null && !error.isEmpty()}">
+                <div>
+                    <h1>${error}</h1>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <c:choose>
+                    <c:when test="${sessionScope.token.getType() == 'user'}">
+                        <c:forEach items="${posts}" var="post">
+                            <div class="item">
+                                <jsp:include page="components/PostCard.jsp">
+                                    <jsp:param name="id" value="${post.getId()}"/>
+                                    <jsp:param name="title" value="${post.getTitle()}"/>
+                                </jsp:include>
+                            </div>
+                        </c:forEach>
+                    </c:when>
+                    <c:otherwise>
+                        <c:forEach items="${posts}" var="post">
+                            <div class="item">
+                                <jsp:include page="components/AdminPostCard.jsp">
+                                    <jsp:param name="id" value="${post.getId()}"/>
+                                    <jsp:param name="title" value="${post.getTitle()}"/>
+                                </jsp:include>
+                            </div>
+                        </c:forEach>
+                    </c:otherwise>
+                </c:choose>
+            </c:otherwise>
+        </c:choose>
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
