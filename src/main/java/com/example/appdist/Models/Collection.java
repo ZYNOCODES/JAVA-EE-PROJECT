@@ -6,12 +6,25 @@ public class Collection {
     private String name;
     private String description;
     private String end_date;
+    private String img;
 
-    public Collection(int id, String name, String description, String end_date) {
+    public Collection(int id, String name, String description, String end_date, String img) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.end_date = end_date;
+        this.img = img;
+    }
+
+    public Collection(String name, String description, String end_date, String img) {
+        this.name = name;
+        this.description = description;
+        this.end_date = end_date;
+        this.img = img;
+    }
+
+    public Collection(int id) {
+        this.id = id;
     }
 
     public int getId() {
@@ -44,5 +57,13 @@ public class Collection {
 
     public void setEnd_date(String end_date) {
         this.end_date = end_date;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
     }
 }

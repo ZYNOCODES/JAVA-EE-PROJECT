@@ -4,6 +4,9 @@ import java.io.*;
 import java.sql.*;
 
 import com.example.appdist.Config.DBConfiguration;
+import com.example.appdist.Models.User;
+import com.example.appdist.Models.UserDAO.UserDAO;
+import com.example.appdist.Models.UserDAO.UserDAOImpl;
 import com.example.appdist.util.PasswordHashing;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -20,9 +23,6 @@ public class SignUpServlet extends HttpServlet {
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Connection connection = null;
-        String SELECTquery = "SELECT * FROM users WHERE email = ?";
-        String INSERTquery = "insert into users(name, email, password, phone) values(?,?,?,?)";
         try {
             String name = request.getParameter("name");
             String email = request.getParameter("email");
@@ -36,7 +36,7 @@ public class SignUpServlet extends HttpServlet {
                 request.getRequestDispatcher("registration.jsp").forward(request, response);
                 return;
             }
-            if (password == null || password.length() < 6) {
+            if (password.length() < 6) {
                 String errorMessage = "Please enter a valid password";
                 request.setAttribute("errorMessage", errorMessage);
                 request.getRequestDispatcher("registration.jsp").forward(request, response);
@@ -49,46 +49,29 @@ public class SignUpServlet extends HttpServlet {
                 return;
             }
 
-            connection = DBConfiguration.getConnection();
+            User user = new User(email, password, name, phone, "user");
+            UserDAO userDAO = new UserDAOImpl();
 
-            PreparedStatement SELECTStatement = connection.prepareStatement(SELECTquery);
-            SELECTStatement.setString(1, email);
-            ResultSet SELECTresultSet = SELECTStatement.executeQuery();
-            if (SELECTresultSet.next()) {
+            int result = userDAO.insert(user);
+            if (result == 400) {
                 String errorMessage = "Email already exists";
                 request.setAttribute("errorMessage", errorMessage);
                 request.getRequestDispatcher("registration.jsp").forward(request, response);
                 return;
             }
 
-            PreparedStatement INSERTStatement = connection.prepareStatement(INSERTquery);
-            INSERTStatement.setString(1, name);
-            INSERTStatement.setString(2, email);
-            String hash = PasswordHashing.hashPassword(password);
-            INSERTStatement.setString(3, hash);
-            INSERTStatement.setString(4, phone);
-
-            int rowCount = INSERTStatement.executeUpdate();
-            if (rowCount > 0) {
-                request.setAttribute("status", "success");
-                request.setAttribute("message", "You have successfully registered!");
-                response.sendRedirect(request.getContextPath() + "/Login");
-            }else {
+            if (result == 500) {
                 request.setAttribute("status", "failed");
                 request.setAttribute("message", "Something went wrong!");
                 response.sendRedirect(request.getContextPath() + "/SignUp");
             }
 
+            request.setAttribute("status", "success");
+            request.setAttribute("message", "You have successfully registered!");
+            response.sendRedirect(request.getContextPath() + "/Login");
+
         }catch (Exception err){
             err.printStackTrace();
-        }finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 }

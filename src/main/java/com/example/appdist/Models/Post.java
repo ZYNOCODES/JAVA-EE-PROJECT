@@ -16,6 +16,17 @@ public class Post {
         this.image = image;
     }
 
+    public Post(int collection, String title, String description, String image) {
+        this.collection = collection;
+        this.title = title;
+        this.description = description;
+        this.image = image;
+    }
+
+    public Post(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }

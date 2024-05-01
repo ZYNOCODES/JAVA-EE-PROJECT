@@ -2,7 +2,11 @@ package com.example.appdist;
 
 import com.example.appdist.Config.DBConfiguration;
 import com.example.appdist.Models.Collection;
-import com.example.appdist.util.PasswordHashing;
+import com.example.appdist.Models.CollectionDAO.CollectionDAO;
+import com.example.appdist.Models.CollectionDAO.CollectionDAOImpl;
+import com.example.appdist.Models.Post;
+import com.example.appdist.Models.PostDAO.PostDAO;
+import com.example.appdist.Models.PostDAO.PostDAOImpl;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -24,23 +28,9 @@ public class AddNewPostServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Connection connection = null;
-        String SELECTquery = "SELECT * FROM collection";
         try {
-            connection = DBConfiguration.getConnection();
-
-            PreparedStatement SELECTStatement = connection.prepareStatement(SELECTquery);
-            ResultSet SELECTresultSet = SELECTStatement.executeQuery();
-
-            while (SELECTresultSet.next()) {
-                com.example.appdist.Models.Collection collection = new com.example.appdist.Models.Collection(
-                        SELECTresultSet.getInt("id"),
-                        SELECTresultSet.getString("name"),
-                        SELECTresultSet.getString("description"),
-                        SELECTresultSet.getString("end_date")
-                );
-                items.add(collection);
-            }
+            CollectionDAO collectionDAO = new CollectionDAOImpl();
+            List<Collection> items = collectionDAO.getAll();
             if (items.isEmpty())
                 req.setAttribute("error", "No collections found.");
             else
@@ -55,9 +45,6 @@ public class AddNewPostServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Connection connection = null;
-        String SELECTquery = "SELECT * FROM post WHERE title = ?";
-        String INSERTquery = "insert into post(collection, title, description, image) values(?,?,?,?)";
         try {
             String collection = req.getParameter("collection");
             String title = req.getParameter("title");
@@ -72,12 +59,16 @@ public class AddNewPostServlet extends HttpServlet {
                 return;
             }
 
-            connection = DBConfiguration.getConnection();
+            Post post = new Post(Integer.parseInt(collection), title, description, image);
+            PostDAO postDAO = new PostDAOImpl();
+            int result = postDAO.insert(post);
+            if (result == 200) {
+                req.setAttribute("message", "You have successfully add a post!");
+                resp.sendRedirect(req.getContextPath() + "/Collection?cardID="+collection);
+                return;
+            }
 
-            PreparedStatement SELECTStatement = connection.prepareStatement(SELECTquery);
-            SELECTStatement.setString(1, title);
-            ResultSet SELECTresultSet = SELECTStatement.executeQuery();
-            if (SELECTresultSet.next()) {
+            if (result == 400) {
                 String errorMessage = "A post with this title already exists";
                 req.setAttribute("errorMessage", errorMessage);
                 req.setAttribute("cards", items);
@@ -85,33 +76,13 @@ public class AddNewPostServlet extends HttpServlet {
                 return;
             }
 
-            PreparedStatement INSERTStatement = connection.prepareStatement(INSERTquery);
-            INSERTStatement.setString(1, collection);
-            INSERTStatement.setString(2, title);
-            INSERTStatement.setString(3, description);
-            INSERTStatement.setString(4, image);
-
-            int rowCount = INSERTStatement.executeUpdate();
-            if (rowCount <= 0) {
-                String errorMessage = "Something went wrong!";
-                req.setAttribute("errorMessage", errorMessage);
-                req.setAttribute("cards", items);
-                req.getRequestDispatcher("newPostForm.jsp").forward(req, resp);
-                return;
-            }
-            req.setAttribute("message", "You have successfully add a post!");
-            resp.sendRedirect(req.getContextPath() + "/Collection?cardID="+collection);
+            String errorMessage = "Something went wrong!";
+            req.setAttribute("errorMessage", errorMessage);
+            req.setAttribute("cards", items);
+            req.getRequestDispatcher("newPostForm.jsp").forward(req, resp);
 
         }catch (Exception err){
             err.printStackTrace();
-        }finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 }
