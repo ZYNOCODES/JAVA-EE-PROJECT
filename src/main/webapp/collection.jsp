@@ -195,6 +195,9 @@
                                 <jsp:include page="components/PostCard.jsp">
                                     <jsp:param name="id" value="${post.getId()}"/>
                                     <jsp:param name="title" value="${post.getTitle()}"/>
+                                    <jsp:param name="description" value="${post.getDescription()}"/>
+                                    <jsp:param name="collection" value="${post.getCollection()}"/>
+                                    <jsp:param name="isVoted" value="${post.isVote()}"/>
                                 </jsp:include>
                             </div>
                         </c:forEach>

@@ -6,7 +6,7 @@ public class Post {
     private String title;
     private String description;
     private String image;
-
+    private boolean vote;
 
     public Post(int id, int collection, String title, String description, String image) {
         this.id = id;
@@ -25,6 +25,15 @@ public class Post {
 
     public Post(int id) {
         this.id = id;
+    }
+
+    public Post(int id, int collection, String title, String description, String image, boolean vote) {
+        this.id = id;
+        this.collection = collection;
+        this.title = title;
+        this.description = description;
+        this.image = image;
+        this.vote = vote;
     }
 
     public int getId() {
@@ -65,5 +74,13 @@ public class Post {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public boolean isVote() {
+        return vote;
+    }
+
+    public void setVote(boolean vote) {
+        this.vote = vote;
     }
 }

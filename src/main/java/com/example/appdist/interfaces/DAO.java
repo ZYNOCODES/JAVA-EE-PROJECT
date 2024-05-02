@@ -1,4 +1,4 @@
-package com.example.appdist.Models;
+package com.example.appdist.interfaces;
 
 import java.sql.SQLException;
 import java.util.List;

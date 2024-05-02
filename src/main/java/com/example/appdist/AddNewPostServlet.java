@@ -78,7 +78,6 @@ public class AddNewPostServlet extends HttpServlet {
 
             String errorMessage = "Something went wrong!";
             req.setAttribute("errorMessage", errorMessage);
-            req.setAttribute("cards", items);
             req.getRequestDispatcher("newPostForm.jsp").forward(req, resp);
 
         }catch (Exception err){

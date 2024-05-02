@@ -15,7 +15,25 @@ public class PostDAOImpl implements PostDAO{
 
     @Override
     public Post get(int id) throws SQLException {
-        return null;
+        Connection connection = null;
+        String SELECTquery = "SELECT * FROM post WHERE id = ?";
+
+        connection = DBConfiguration.getConnection();
+
+        PreparedStatement SELECTStatement = connection.prepareStatement(SELECTquery);
+        SELECTStatement.setInt(1, id);
+
+        ResultSet SELECTresultSet = SELECTStatement.executeQuery();
+        if (!SELECTresultSet.next()) {
+            return null;
+        }
+
+        return new Post(
+                SELECTresultSet.getInt("collection"),
+                SELECTresultSet.getString("title"),
+                SELECTresultSet.getString("description"),
+                SELECTresultSet.getString("image")
+        );
     }
 
     @Override
@@ -82,9 +100,10 @@ public class PostDAOImpl implements PostDAO{
     }
 
     @Override
-    public List<Post> getAllbyCollection(Collection collection) throws SQLException {
+    public List<Post> getAllbyCollection(Collection collection, int id) throws SQLException {
         Connection connection = DBConfiguration.getConnection();
         String SELECTquery = "SELECT * FROM `post` WHERE collection = ?";
+        String SELECTVoteQuery = "SELECT * FROM `vote` WHERE user = ? AND post = ?";
 
         PreparedStatement SELECTStatement = connection.prepareStatement(SELECTquery);
         SELECTStatement.setInt(1, collection.getId());
@@ -101,6 +120,18 @@ public class PostDAOImpl implements PostDAO{
             );
             posts.add(post);
         }
+        for(int i = 0; i < posts.size(); i++){
+            PreparedStatement SELECTVoteStatement = connection.prepareStatement(SELECTVoteQuery);
+            SELECTVoteStatement.setInt(1, id);
+            SELECTVoteStatement.setInt(2, posts.get(i).getId());
+            ResultSet SELECTVoteresultSet = SELECTVoteStatement.executeQuery();
+            while (SELECTVoteresultSet.next()) {
+                posts.get(i).setVote(true);
+            }
+            if (posts.get(i).isVote())
+                break;
+        }
+
         return posts;
     }
 }
