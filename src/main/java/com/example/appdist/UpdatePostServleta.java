@@ -1,6 +1,5 @@
 package com.example.appdist;
 
-import com.example.appdist.Config.DBConfiguration;
 import com.example.appdist.Models.Collection;
 import com.example.appdist.Models.CollectionDAO.CollectionDAO;
 import com.example.appdist.Models.CollectionDAO.CollectionDAOImpl;
@@ -15,16 +14,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 
-@WebServlet(name = "AddNewPostServlet", value = "/AddNewPost")
-public class AddNewPostServlet extends HttpServlet {
+@WebServlet(name = "UpdatePostServleta", value = "/UpdatePost")
+public class UpdatePostServleta extends HttpServlet {
     List<Collection> items = new ArrayList<>();
 
     @Override
@@ -32,12 +26,21 @@ public class AddNewPostServlet extends HttpServlet {
         try {
             CollectionDAO collectionDAO = new CollectionDAOImpl();
             items = collectionDAO.getAll();
+
+            String postID = req.getParameter("postID");
+            PostDAO postDAO = new PostDAOImpl();
+            Post post = postDAO.get(Integer.parseInt(postID));
+            if (post.getTitle().isEmpty())
+                req.setAttribute("error", "No post data found.");
+            else
+                req.setAttribute("post", post);
+
             if (items.isEmpty())
                 req.setAttribute("error", "No collections found.");
             else
                 req.setAttribute("cards", items);
 
-            RequestDispatcher dispatcher = req.getRequestDispatcher("newPostForm.jsp");
+            RequestDispatcher dispatcher = req.getRequestDispatcher("UpdatePostForm.jsp");
             dispatcher.forward(req, resp);
         } catch (Exception e) {
             e.printStackTrace();
@@ -50,42 +53,37 @@ public class AddNewPostServlet extends HttpServlet {
             String collection = req.getParameter("collection");
             String title = req.getParameter("title");
             String description = req.getParameter("description");
-            String image = req.getParameter("imageUrl");
+            String image = req.getParameter("image");
+            String postID = req.getParameter("postID");
 
-            if (collection == null || collection.isEmpty() ||
-                    title == null || title.isEmpty() ||
-                    description == null || description.isEmpty() ||
-                    image == null || image.isEmpty()) {
-                String errorMessage = "Please fill all the required fields";
+            if (postID.isEmpty() || collection.isEmpty() && title.isEmpty() && description.isEmpty() && image.isEmpty()) {
+                String errorMessage = "Please do at least one modification";
+                System.out.println(errorMessage);
                 req.setAttribute("errorMessage", errorMessage);
                 req.setAttribute("cards", items);
-                resp.setStatus(400);
                 req.getRequestDispatcher("newPostForm.jsp").forward(req, resp);
                 return;
             }
 
-            Post post = new Post(Integer.parseInt(collection), title, description, image);
+            Post post = new Post(Integer.parseInt(postID) ,Integer.parseInt(collection), title, description, image);
             PostDAO postDAO = new PostDAOImpl();
-            int result = postDAO.insert(post);
+            int result = postDAO.update(post);
             if (result == 200) {
-                req.setAttribute("message", "You have successfully add a post!");
-                resp.setStatus(200);
-                resp.sendRedirect(req.getContextPath() + "/Collection?cardID="+collection);
+                req.setAttribute("message", "You have successfully update a post!");
+                resp.sendRedirect(req.getContextPath() + "/Post?postID="+postID);
                 return;
             }
 
             if (result == 400) {
-                String errorMessage = "A post with this title already exists";
+                String errorMessage = "A post with this id doesnt exists";
                 req.setAttribute("errorMessage", errorMessage);
                 req.setAttribute("cards", items);
-                resp.setStatus(400);
                 req.getRequestDispatcher("newPostForm.jsp").forward(req, resp);
                 return;
             }
 
             String errorMessage = "Something went wrong!";
             req.setAttribute("errorMessage", errorMessage);
-            resp.setStatus(500);
             req.getRequestDispatcher("newPostForm.jsp").forward(req, resp);
 
         }catch (Exception err){

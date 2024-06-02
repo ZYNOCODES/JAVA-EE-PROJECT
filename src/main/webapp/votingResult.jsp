@@ -1,12 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
-<%
-    if(session.getAttribute("token") == null){
-        response.sendRedirect("/Login");
-    }
-%>
-<!DOCTYPE html>
-<html lang="en">
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<html>
 <head>
     <jsp:include page="components/header.jsp"/>
     <style>
@@ -208,13 +202,8 @@
 </head>
 <body>
 <jsp:include page="components/navbar.jsp">
-    <jsp:param name="condition" value="post"/>
+    <jsp:param name="condition" value=""/>
 </jsp:include>
-<c:if test="${errorMessage != null && !errorMessage.isEmpty()}">
-    <jsp:include page="components/ErrorDialog.jsp">
-        <jsp:param name="msg" value="${errorMessage}"/>
-    </jsp:include>
-</c:if>
 <div class="cards_container">
     <div class="band">
         <c:choose>
@@ -224,49 +213,21 @@
                 </div>
             </c:when>
             <c:otherwise>
-                <c:choose>
-                    <c:when test="${sessionScope.token.getType() == 'user'}">
-                        <c:forEach items="${posts}" var="post">
-                            <div class="item">
-                                <jsp:include page="components/PostCard.jsp">
-                                    <jsp:param name="id" value="${post.getId()}"/>
-                                    <jsp:param name="title" value="${post.getTitle()}"/>
-                                    <jsp:param name="description" value="${post.getDescription()}"/>
-                                    <jsp:param name="collection" value="${post.getCollection()}"/>
-                                    <jsp:param name="isVoted" value="${post.isVote()}"/>
-                                    <jsp:param name="image" value="${post.getImage()}"/>
-                                </jsp:include>
-                            </div>
-                        </c:forEach>
-                    </c:when>
-                    <c:otherwise>
-                        <c:forEach items="${posts}" var="post">
-                            <div class="item">
-                                <jsp:include page="components/AdminPostCard.jsp">
-                                    <jsp:param name="id" value="${post.getId()}"/>
-                                    <jsp:param name="title" value="${post.getTitle()}"/>
-                                    <jsp:param name="collection" value="${post.getCollection()}"/>
-                                    <jsp:param name="image" value="${post.getImage()}"/>
-                                </jsp:include>
-                            </div>
-                        </c:forEach>
-                    </c:otherwise>
-                </c:choose>
+                <c:forEach items="${posts}" var="post">
+                    <div class="item">
+                        <jsp:include page="components/VotingResultCard.jsp">
+                            <jsp:param name="id" value="${post.getId()}"/>
+                            <jsp:param name="title" value="${post.getTitle()}"/>
+                            <jsp:param name="description" value="${post.getDescription()}"/>
+                            <jsp:param name="collection" value="${post.getCollection()}"/>
+                            <jsp:param name="votingResult" value="${post.getVotingResult()}"/>
+                        </jsp:include>
+                    </div>
+                </c:forEach>
             </c:otherwise>
         </c:choose>
     </div>
 </div>
-<script>
-    const modal = document.querySelector('.modal');
-    const openButton = document.querySelector('.open-button');
-    const closeButton = document.querySelector('.close-button');
-    modal.showModal();
 
-    closeButton.addEventListener('click', () => {
-        modal.close();
-    });
-</script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
 </body>
 </html>

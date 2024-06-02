@@ -185,7 +185,7 @@
 </jsp:include>
 <section class="container-form">
     <header>Registration Form</header>
-    <form action="AddNewPost" method="post" class="form">
+    <form action="AddNewPost" method="post" id="postForm" class="form">
         <select class="select-box" name="collection">
             <option value="">sélectionne une collection</option>
             <c:forEach items="${cards}" var="Card">
@@ -202,11 +202,44 @@
         </div>
         <div class="input-box">
             <label>Image</label>
-            <input type="file" name="image" placeholder="Entrez une image" />
+            <input type="file" id="image" name="image" placeholder="Entrez une image" />
         </div>
         <p class="toast">${errorMessage}</p>
-        <button>Ajouter</button>
+        <button type="button" onclick="submitForm()">Ajouter</button>
     </form>
 </section>
+<script>
+    async function submitForm() {
+        const form = document.getElementById('postForm');
+        // Separate the image file
+        const imageFile = document.getElementById('image').files[0];
+        const imageFormData = new FormData();
+        imageFormData.append('image', imageFile);
+
+        // First, upload the image to the Spring Boot API
+        let imageUploadStatus;
+        try {
+            const imageResponse = await fetch('http://localhost:9191/image', {
+                method: 'POST',
+                body: imageFormData
+            });
+            console.log("This is response : "+ await imageResponse.status);
+            imageUploadStatus = await imageResponse.status;
+            if (imageUploadStatus !== 200) {
+                throw new Error('Image upload failed');
+            }
+            const imageUrlInput = document.createElement('input');
+            imageUrlInput.type = 'hidden';
+            imageUrlInput.name = 'imageUrl';
+            imageUrlInput.value = await imageResponse.text();
+            form.appendChild(imageUrlInput);
+            form.submit();
+
+        } catch (error) {
+            alert('Image upload failed: ' + error.message);
+            return;
+        }
+    }
+</script>
 </body>
 </html>

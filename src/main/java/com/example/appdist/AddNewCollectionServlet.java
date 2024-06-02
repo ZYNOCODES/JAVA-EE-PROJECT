@@ -65,7 +65,7 @@ public class AddNewCollectionServlet extends HttpServlet {
             String name = req.getParameter("name");
             String end_date = req.getParameter("end_date");
             String description = req.getParameter("description");
-            String image = req.getParameter("image");
+            String image = req.getParameter("imageUrl");
 
             if (name.isEmpty() || end_date.isEmpty() || description.isEmpty() || image.isEmpty()) {
                 String errorMessage = "Please fill all the required fields";

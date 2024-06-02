@@ -1,9 +1,10 @@
 package com.example.appdist;
 
-import com.example.appdist.Config.DBConfiguration;
+import com.example.appdist.Models.Collection;
 import com.example.appdist.Models.Post;
 import com.example.appdist.Models.PostDAO.PostDAO;
 import com.example.appdist.Models.PostDAO.PostDAOImpl;
+import com.example.appdist.Models.User;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -12,29 +13,24 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.util.List;
 
-
-@WebServlet(name = "PostServlet", value = "/Post")
-public class PostServlet extends HttpServlet {
+@WebServlet(name = "VotingResultServlet", value = "/VotingResult")
+public class VotingResultServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        int cardID = Integer.parseInt(req.getParameter("cardID"));
         try {
-            String postID = req.getParameter("postID");
+            Collection collection = new Collection(cardID);
             PostDAO postDAO = new PostDAOImpl();
-            Post post = postDAO.get(Integer.parseInt(postID));
+            List<Post> posts = postDAO.getAllVotingResultbyCollection(collection);
 
-            if (post.getTitle().isEmpty()) {
-                req.setAttribute("error", "No data found.");
-                RequestDispatcher dispatcher = req.getRequestDispatcher("post.jsp");
-                dispatcher.forward(req, resp);
-                return;
-            }
+            if (posts.size() <= 0)
+                req.setAttribute("error", "No posts found.");
+            else
+                req.setAttribute("posts", posts);
 
-            req.setAttribute("post", post);
-            RequestDispatcher dispatcher = req.getRequestDispatcher("post.jsp");
+            RequestDispatcher dispatcher = req.getRequestDispatcher("votingResult.jsp");
             dispatcher.forward(req, resp);
 
         } catch (Exception e) {

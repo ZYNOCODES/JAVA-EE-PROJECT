@@ -221,6 +221,7 @@
 									<jsp:param name="name" value="${Card.getName()}"/>
 									<jsp:param name="description" value="${Card.getDescription()}"/>
 									<jsp:param name="endDate" value="${Card.getEnd_date()}"/>
+									<jsp:param name="image" value="${Card.getImg()}"/>
 								</jsp:include>
 							</c:when>
 							<c:otherwise>
@@ -230,6 +231,7 @@
 									<jsp:param name="name" value="${Card.getName()}"/>
 									<jsp:param name="description" value="${Card.getDescription()}"/>
 									<jsp:param name="endDate" value="${Card.getEnd_date()}"/>
+									<jsp:param name="image" value="${Card.getImg()}"/>
 								</jsp:include>
 							</c:otherwise>
 						</c:choose>
@@ -242,6 +244,7 @@
 	function showToast(message) {
 		alert(message);
 	}
+	console.log(pageContext.request.contextPath)
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>

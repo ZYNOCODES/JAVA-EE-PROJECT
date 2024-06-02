@@ -1,4 +1,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%--
+  Created by IntelliJ IDEA.
+  User: lv
+  Date: 4/27/2024
+  Time: 7:13 PM
+  To change this template use File | Settings | File Templates.
+--%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <head>
     <jsp:include page="components/header.jsp"/>
@@ -178,58 +185,30 @@
 </jsp:include>
 <section class="container-form">
     <header>Registration Form</header>
-    <form id="AddNewCollectionForm" action="AddNewCollection" method="post" class="form">
+    <form action="UpdatePost" method="post" class="form">
+        <input type="hidden" name="postID" value="${post.getId()}"/>
+
+        <select class="select-box" name="collection">
+            <option value="${post.getCollection()}">sélectionne une collection</option>
+            <c:forEach items="${cards}" var="Card">
+                <option value="${Card.getId()}">${Card.getName()}</option>
+            </c:forEach>
+        </select>
         <div class="input-box">
-            <label>Nom</label>
-            <input type="text" name="name" placeholder="Entrez un nom" />
+            <label>Titre</label>
+            <input type="text" name="title" value="${post.getTitle()}"/>
         </div>
         <div class="input-box">
             <label>Discription</label>
-            <input type="text" name="description" placeholder="Entrez une description" />
-        </div>
-        <div class="input-box">
-            <label>Date d'expiration</label>
-            <input type="datetime-local" name="end_date" placeholder="Entrez une date d'expiration" />
+            <input type="text" name="description" value="${post.getDescription()}" />
         </div>
         <div class="input-box">
             <label>Image</label>
-            <input type="file" id="image" name="image" placeholder="Entrez une image" />
+            <input type="file" name="image" value="${post.getImage()}" />
         </div>
         <p class="toast">${errorMessage}</p>
-        <button type="button" onclick="submitForm()">Ajouter</button>
+        <button>Modifie</button>
     </form>
 </section>
-<script>
-    async function submitForm() {
-        const form = document.getElementById('AddNewCollectionForm');
-        // Separate the image file
-        const imageFile = document.getElementById('image').files[0];
-        const imageFormData = new FormData();
-        imageFormData.append('image', imageFile);
-
-        // First, upload the image to the Spring Boot API
-        let imageUploadStatus;
-        try {
-            const imageResponse = await fetch('http://localhost:9191/image', {
-                method: 'POST',
-                body: imageFormData
-            });
-
-            imageUploadStatus = await imageResponse.status;
-            if (imageUploadStatus !== 200) {
-                throw new Error('Image upload failed');
-            }
-            const imageUrlInput = document.createElement('input');
-            imageUrlInput.type = 'hidden';
-            imageUrlInput.name = 'imageUrl';
-            imageUrlInput.value = await imageResponse.text();
-            form.appendChild(imageUrlInput);
-            form.submit();
-        } catch (error) {
-            alert('Image upload failed: ' + error.message);
-            return;
-        }
-    }
-</script>
 </body>
 </html>

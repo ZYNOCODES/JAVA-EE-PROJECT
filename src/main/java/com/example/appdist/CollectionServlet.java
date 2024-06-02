@@ -45,31 +45,32 @@ public class CollectionServlet extends HttpServlet {
                     int result = postDAO.delete(post);
                     if (result == 200){
                         req.setAttribute("message", "Post with ID " + idToDelete + " deleted successfully!");
-                        resp.sendRedirect(req.getContextPath() + "/Home");
+                        resp.sendRedirect(req.getContextPath()+"/Home");
                     }
 
                     if (result == 400) {
                         String errorMessage = "Post with ID " + idToDelete + " not found";
                         req.setAttribute("errorMessage", errorMessage);
-                        req.getRequestDispatcher("index.jsp").forward(req, resp);
+                        resp.sendRedirect(req.getContextPath()+"/Home");
                         return;
                     }
 
                     String errorMessage = "Failed to delete post with ID " + idToDelete;
                     req.setAttribute("errorMessage", errorMessage);
-                    req.getRequestDispatcher("index.jsp").forward(req, resp);
+                    resp.sendRedirect(req.getContextPath()+"/Home");
 
                 } catch (Exception err) {
                     err.printStackTrace();
                 }
                 break;
             default:
+                User user = (User) req.getSession().getAttribute("token");
                 int cardID = Integer.parseInt(req.getParameter("cardID"));
                 try {
 
                     Collection collection = new Collection(cardID);
                     PostDAO postDAO = new PostDAOImpl();
-                    List<Post> posts = postDAO.getAllbyCollection(collection, 13);
+                    List<Post> posts = postDAO.getAllbyCollection(collection, user.getId());
 
                     if (posts.isEmpty())
                         req.setAttribute("error", "No posts found.");
@@ -90,18 +91,17 @@ public class CollectionServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
+            User user = (User) request.getSession().getAttribute("token");
             String post = request.getParameter("post");
             String collection = request.getParameter("collection");
 
             if (collection.isEmpty() || post.isEmpty()) {
                 String errorMessage = "Please fill all the required fields";
-                request.setAttribute("errorMessage", errorMessage);
-                System.out.println(errorMessage);
-                request.getRequestDispatcher("collection.jsp").forward(request, response);
+                response.sendRedirect(request.getContextPath() + "/Collection?cardID="+collection);
                 return;
             }
             LocalDateTime currentDateTime = LocalDateTime.now();
-            Vote vote = new Vote(Integer.parseInt(post), Integer.parseInt("13"), currentDateTime.toString());
+            Vote vote = new Vote(Integer.parseInt(post), user.getId(), currentDateTime.toString());
             VoteDAO voteDAO = new VoteDAOImpl();
             int result = voteDAO.SubmitVote(vote, Integer.parseInt(collection));
             if (result == 400) {
@@ -112,15 +112,12 @@ public class CollectionServlet extends HttpServlet {
                 return;
             }
             if (result == 200) {
-                request.setAttribute("message", "You have successfully voted!");
-                System.out.println("You have successfully voted!");
+                String succesMessage = "You have successfully voted!";
                 response.sendRedirect(request.getContextPath() + "/Collection?cardID="+collection);
                 return;
             }
             String errorMessage = "Something went wrong!";
-            request.setAttribute("errorMessage", errorMessage);
-            System.out.println(errorMessage);
-            request.getRequestDispatcher("collection.jsp").forward(request, response);
+            response.sendRedirect(request.getContextPath() + "/Collection?cardID="+collection);
         }catch (Exception e){
             e.printStackTrace();
         }

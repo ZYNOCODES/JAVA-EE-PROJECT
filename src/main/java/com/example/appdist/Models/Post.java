@@ -7,6 +7,7 @@ public class Post {
     private String description;
     private String image;
     private boolean vote;
+    private int votingResult;
 
     public Post(int id, int collection, String title, String description, String image) {
         this.id = id;
@@ -82,5 +83,13 @@ public class Post {
 
     public void setVote(boolean vote) {
         this.vote = vote;
+    }
+
+    public int getVotingResult() {
+        return votingResult;
+    }
+
+    public void setVotingResult(int votingResult) {
+        this.votingResult = votingResult;
     }
 }

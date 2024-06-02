@@ -14,14 +14,22 @@
                                 </form>
                             </li>
                         </c:when>
+                        <c:when test="${param.condition == 'post'}">
+                            <li class="nav-item">
+                                <form action="AddNewPost" method="get">
+                                    <input type="submit" class="nav-link py-3 px-0 px-lg-3 rounded" value="add new post">
+                                </form>
+                            </li>
+                        </c:when>
+                        <c:when test="${param.condition == 'updatepost'}">
+                            <li class="nav-item">
+                                <a href="UpdatePost?postID=${param.id}">
+                                    <input type="button" class="nav-link py-3 px-0 px-lg-3 rounded" value="update post">
+                                </a>
+                            </li>
+                        </c:when>
                         <c:otherwise>
-                            <c:if test="${param.condition == 'post'}">
-                                <li class="nav-item">
-                                    <form action="AddNewPost" method="get">
-                                        <input type="submit" class="nav-link py-3 px-0 px-lg-3 rounded" value="add new post">
-                                    </form>
-                                </li>
-                            </c:if>
+                            <!-- Default case if none of the conditions are met -->
                         </c:otherwise>
                     </c:choose>
                 </c:if>

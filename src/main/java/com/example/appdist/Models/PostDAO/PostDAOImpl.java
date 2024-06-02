@@ -29,6 +29,7 @@ public class PostDAOImpl implements PostDAO{
         }
 
         return new Post(
+                SELECTresultSet.getInt("id"),
                 SELECTresultSet.getInt("collection"),
                 SELECTresultSet.getString("title"),
                 SELECTresultSet.getString("description"),
@@ -70,7 +71,31 @@ public class PostDAOImpl implements PostDAO{
 
     @Override
     public int update(Post post) throws SQLException {
-        return 0;
+        Connection connection = null;
+        String SELECTquery = "SELECT * FROM post WHERE id = ?";
+        String UPDATEquery = "UPDATE post SET collection = ?, title = ?, description = ?, image = ? WHERE id= ?";
+        connection = DBConfiguration.getConnection();
+
+        PreparedStatement SELECTStatement = connection.prepareStatement(SELECTquery);
+        SELECTStatement.setInt(1, post.getId());
+        ResultSet SELECTresultSet = SELECTStatement.executeQuery();
+        if (!SELECTresultSet.next()) {
+            return 400;
+        }
+
+        PreparedStatement UPDATEStatement = connection.prepareStatement(UPDATEquery);
+        UPDATEStatement.setInt(1, post.getCollection());
+        UPDATEStatement.setString(2, post.getTitle());
+        UPDATEStatement.setString(3, post.getDescription());
+        UPDATEStatement.setString(4, post.getImage());
+        UPDATEStatement.setInt(5, post.getId());
+
+
+        int rowCount = UPDATEStatement.executeUpdate();
+        if (rowCount <= 0)
+            return 500;
+        else
+            return 200;
     }
 
     @Override
@@ -130,6 +155,43 @@ public class PostDAOImpl implements PostDAO{
             }
             if (posts.get(i).isVote())
                 break;
+        }
+
+        return posts;
+    }
+
+    @Override
+    public List<Post> getAllVotingResultbyCollection(Collection collection) throws SQLException {
+        Connection connection = DBConfiguration.getConnection();
+        String SELECTquery = "SELECT * FROM `post` WHERE collection = ?";
+        String SELECTVoteQuery = "SELECT * FROM `vote` WHERE post = ?";
+
+        PreparedStatement SELECTStatement = connection.prepareStatement(SELECTquery);
+        SELECTStatement.setInt(1, collection.getId());
+        ResultSet SELECTresultSet = SELECTStatement.executeQuery();
+
+        List<Post> posts = new ArrayList<>();
+        while (SELECTresultSet.next()) {
+            Post post = new Post(
+                    SELECTresultSet.getInt("id"),
+                    SELECTresultSet.getInt("collection"),
+                    SELECTresultSet.getString("title"),
+                    SELECTresultSet.getString("description"),
+                    SELECTresultSet.getString("image")
+            );
+            posts.add(post);
+        }
+
+        for(int i = 0; i < posts.size(); i++){
+            PreparedStatement SELECTVoteStatement = connection.prepareStatement(SELECTVoteQuery);
+            SELECTVoteStatement.setInt(1, posts.get(i).getId());
+            ResultSet SELECTVoteresultSet = SELECTVoteStatement.executeQuery();
+
+            int cpt = 0;
+            while (SELECTVoteresultSet.next())
+                cpt++;
+
+            posts.get(i).setVotingResult(cpt);
         }
 
         return posts;

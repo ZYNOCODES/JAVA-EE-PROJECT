@@ -9,5 +9,6 @@ import java.util.List;
 
 public interface PostDAO extends DAO<Post> {
     List<Post> getAllbyCollection(Collection collection, int id) throws SQLException;
+    List<Post> getAllVotingResultbyCollection(Collection collection) throws SQLException;
 
 }
